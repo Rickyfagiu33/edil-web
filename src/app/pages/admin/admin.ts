@@ -168,7 +168,7 @@ export class AdminComponent implements OnInit {
         title: [s.title, Validators.required],
         description: [s.description, Validators.required]
       })));
-
+  
       // Orari
       const hoursArray = this.contentForm.get('workingHours') as FormArray;
       hoursArray.clear();

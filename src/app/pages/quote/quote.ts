@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule, CurrencyPipe, TitleCasePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { QuoteCalculatorService, QuoteResult } from '../../services/quote-calculator';
 
 @Component({
   selector: 'app-quote',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, CurrencyPipe, TitleCasePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, CurrencyPipe],
   templateUrl: './quote.html',
   styleUrls: ['./quote.css']
 })

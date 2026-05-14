@@ -55,7 +55,7 @@
         </div>
         <div class="project-actions">
           <button class="btn btn-sm" (click)="editProject(project)">Modifica</button>
-          <button class="btn btn-sm btn-danger" (click)="deleteProject(project.id)">Elimina</button>
+          <button class="btn btn-sm btn-danger" (click)="project.id && deleteProject(project.id)">Elimina</button>
         </div>
       </div>
     </div>

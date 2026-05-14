@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   firebase: {
     apiKey: "AIzaSyDLgMW8VVikefSspIhPTtyoYNUxSQjLWhY",
     authDomain: "edil-web.firebaseapp.com",

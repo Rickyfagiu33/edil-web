@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "ng build --configuration production --base-href https://rickyfagiu33.github.io/edil-web/ && npx angular-cli-ghpages --dir=dist/dani/browser"
   },
   "private": true,
   "packageManager": "npm@11.9.0",
@@ -20,7 +21,8 @@
     "@angular/router": "^21.2.0",
     "firebase": "^12.13.0",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "zone.js": "^0.16.2"
   },
   "devDependencies": {
     "@angular/build": "^21.2.11",

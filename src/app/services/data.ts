@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 import {
   Firestore,
   collection,
@@ -9,7 +10,8 @@ import {
   updateDoc,
   onSnapshot,
   CollectionReference,
-  DocumentData
+  DocumentData,
+  DocumentSnapshot
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -121,7 +123,7 @@ export class DataService {
   private settingsDocRef: any;
   private contentDocRef: any;
 
-  constructor(private firestore: Firestore) {
+  constructor(private firestore: Firestore, private auth: Auth) {
     // Inizializza i riferimenti a Firestore DOPO che firestore è stato iniettato
     this.galleryCollection = collection(this.firestore, 'gallery');
     this.settingsDocRef = doc(this.firestore, 'settings/quote');
@@ -130,7 +132,13 @@ export class DataService {
     // 👉 Ascolta la galleria in tempo reale
     onSnapshot(this.galleryCollection, (snapshot) => {
       if (snapshot.empty) {
-        this.seedDefaultGallery();
+        // Esegui il seed iniziale SOLO se l'utente è autenticato e ha i permessi di scrittura
+        if (this.auth.currentUser) {
+          this.seedDefaultGallery();
+        } else {
+          console.warn('La galleria è vuota su Firestore. Esegui il login per inizializzarla con i dati di default.');
+          this.gallerySubject.next(DEFAULT_GALLERY); // Mostra temporaneamente i dati locali
+        }
       } else {
         const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as GalleryProject));
         this.gallerySubject.next(projects);
@@ -138,22 +146,28 @@ export class DataService {
     });
 
     // 👉 Ascolta impostazioni preventivatore
-    onSnapshot(this.settingsDocRef, (docSnap) => {
+    onSnapshot(this.settingsDocRef, (docSnap: DocumentSnapshot<DocumentData>) => {
       if (docSnap.exists()) {
         this.settingsSubject.next(docSnap.data() as QuoteSettings);
       } else {
-        setDoc(this.settingsDocRef, DEFAULT_SETTINGS);
-        this.settingsSubject.next(DEFAULT_SETTINGS);
+        // Crea il documento iniziale di default SOLO se l'utente è autenticato
+        if (this.auth.currentUser) {
+          setDoc(this.settingsDocRef, DEFAULT_SETTINGS);
+        }
+        this.settingsSubject.next(DEFAULT_SETTINGS); // Carica comunque i dati di default nell'app
       }
     });
 
     // 👉 Ascolta contenuti del sito
-    onSnapshot(this.contentDocRef, (docSnap) => {
+    onSnapshot(this.contentDocRef, (docSnap: DocumentSnapshot<DocumentData>) => {
       if (docSnap.exists()) {
         this.contentSubject.next(docSnap.data() as SiteContent);
       } else {
-        setDoc(this.contentDocRef, DEFAULT_CONTENT);
-        this.contentSubject.next(DEFAULT_CONTENT);
+        // Crea il documento iniziale di default SOLO se l'utente è autenticato
+        if (this.auth.currentUser) {
+          setDoc(this.contentDocRef, DEFAULT_CONTENT);
+        }
+        this.contentSubject.next(DEFAULT_CONTENT); // Carica comunque i dati di default nell'app
       }
     });
   }
