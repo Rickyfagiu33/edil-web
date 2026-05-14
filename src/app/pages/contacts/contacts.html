@@ -1,0 +1,51 @@
+<ng-container *ngIf="content$ | async as c">
+  <section class="page-header">
+    <div class="container">
+      <h1 class="page-title">Contatti</h1>
+      <p class="page-subtitle">Siamo presenti su tutto il territorio nazionale. Contattaci per un sopralluogo gratuito.</p>
+    </div>
+  </section>
+
+  <section class="contacts-section section-padding">
+    <div class="container">
+      <div class="contacts-grid">
+        <div class="contact-info-card">
+          <h2 class="contact-card-title">Contattaci</h2>
+          <ul class="contact-list">
+            <li class="contact-item">
+              <span class="contact-icon">📞</span>
+              <div><strong>Telefono</strong><a [href]="'tel:'+c.phone">{{ c.phone }}</a></div>
+            </li>
+            <li class="contact-item">
+              <span class="contact-icon">✉️</span>
+              <div><strong>Email</strong><a [href]="'mailto:'+c.email">{{ c.email }}</a></div>
+            </li>
+            <li class="contact-item">
+              <span class="contact-icon">🕐</span>
+              <div>
+                <strong>Orari</strong>
+                <span *ngFor="let h of c.workingHours">{{ h }}<br></span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="location-card" *ngFor="let loc of c.locations">
+          <div class="location-header">
+            <span class="location-icon">📍</span>
+            <h3 class="location-city">{{ loc.city }}</h3>
+            <span class="location-badge">{{ loc.badge }}</span>
+          </div>
+          <address class="location-address" [innerHTML]="loc.address"></address>
+          <p class="location-desc">{{ loc.description }}</p>
+        </div>
+      </div>
+
+      <div class="contact-cta">
+        <h3>Preferisci essere ricontattato?</h3>
+        <p>Chiamaci o scrivici una email: ti risponderemo entro 24 ore.</p>
+        <a routerLink="/quote" class="btn btn-primary">Vai al Preventivatore</a>
+      </div>
+    </div>
+  </section>
+</ng-container>

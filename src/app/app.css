@@ -1,0 +1,10 @@
+/* Stili minimi per il layout globale */
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}

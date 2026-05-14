@@ -1,0 +1,139 @@
+<div class="admin-header">
+  <h1>Pannello di Amministrazione</h1>
+  <button class="btn btn-outline-dark" (click)="logout()">Logout</button>
+</div>
+
+<div class="admin-tabs">
+  <button [class.active]="activeTab === 'gallery'" (click)="activeTab = 'gallery'">Galleria</button>
+  <button [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">Preventivo</button>
+  <button [class.active]="activeTab === 'content'" (click)="activeTab = 'content'">Contenuti</button>
+</div>
+
+<!-- ======== TAB GALLERY ======== -->
+<div class="tab-content" *ngIf="activeTab === 'gallery'">
+  <div class="gallery-editor">
+    <form [formGroup]="galleryForm" (ngSubmit)="saveProject()" class="project-form">
+      <h3>{{ editingProjectId ? 'Modifica progetto' : 'Nuovo progetto' }}</h3>
+      <div class="form-row">
+        <label>Titolo</label>
+        <input type="text" formControlName="title" class="form-input">
+      </div>
+      <div class="form-row">
+        <label>Descrizione</label>
+        <textarea formControlName="description" class="form-input" rows="3"></textarea>
+      </div>
+      <div class="form-row">
+        <label>Luogo</label>
+        <input type="text" formControlName="location" class="form-input">
+      </div>
+      <div class="form-row">
+        <label>Categoria</label>
+        <select formControlName="category" class="form-select">
+          <option value="costruzione">Costruzione</option>
+          <option value="restauro">Restauro</option>
+          <option value="modifica">Modifica</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>URL Immagine</label>
+        <input type="text" formControlName="imageUrl" class="form-input">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="galleryForm.invalid">
+          {{ editingProjectId ? 'Aggiorna' : 'Aggiungi' }}
+        </button>
+        <button type="button" class="btn btn-outline-dark" (click)="resetGalleryForm()" *ngIf="editingProjectId">Annulla</button>
+      </div>
+    </form>
+
+    <div class="projects-list">
+      <h3>Progetti attuali</h3>
+      <div *ngFor="let project of projects$ | async" class="project-item">
+        <div class="project-info">
+          <strong>{{ project.title }}</strong> ({{ project.category }}) - {{ project.location }}
+          <br><small>{{ project.imageUrl }}</small>
+        </div>
+        <div class="project-actions">
+          <button class="btn btn-sm" (click)="editProject(project)">Modifica</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteProject(project.id)">Elimina</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== TAB SETTINGS ======== -->
+<div class="tab-content" *ngIf="activeTab === 'settings'">
+  <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()" class="settings-form">
+    <h3>Prezzi base (€/m²)</h3>
+    <div class="form-row"><label>Costruzione</label><input type="number" formControlName="costruzionePrice" class="form-input" step="0.01"></div>
+    <div class="form-row"><label>Restauro</label><input type="number" formControlName="restauroPrice" class="form-input" step="0.01"></div>
+    <div class="form-row"><label>Modifica</label><input type="number" formControlName="modificaPrice" class="form-input" step="0.01"></div>
+
+    <h3>Moltiplicatori difficoltà</h3>
+    <div class="form-row"><label>Bassa</label><input type="number" formControlName="bassaMultiplier" class="form-input" step="0.01"></div>
+    <div class="form-row"><label>Media</label><input type="number" formControlName="mediaMultiplier" class="form-input" step="0.01"></div>
+    <div class="form-row"><label>Alta</label><input type="number" formControlName="altaMultiplier" class="form-input" step="0.01"></div>
+
+    <h3>Aliquota IVA</h3>
+    <div class="form-row"><label>IVA (0.22 = 22%)</label><input type="number" formControlName="vatRate" class="form-input" step="0.01" min="0" max="1"></div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="settingsForm.invalid">Salva Impostazioni</button>
+  </form>
+</div>
+
+<!-- ======== TAB CONTENUTI ======== -->
+<div class="tab-content" *ngIf="activeTab === 'content'">
+  <form [formGroup]="contentForm" (ngSubmit)="saveContent()" class="content-form">
+
+    <h2>Home Page</h2>
+    <div class="form-row"><label>Hero - Titolo</label><input type="text" formControlName="heroTitle" class="form-input"></div>
+    <div class="form-row"><label>Hero - Sottotitolo</label><textarea formControlName="heroSubtitle" class="form-input" rows="2"></textarea></div>
+    <div class="form-row"><label>About - Titolo</label><input type="text" formControlName="aboutTitle" class="form-input"></div>
+    <div class="form-row"><label>About - Testo (HTML permesso)</label><textarea formControlName="aboutText" class="form-input" rows="6"></textarea></div>
+    <div class="form-row"><label>CTA - Titolo</label><input type="text" formControlName="ctaTitle" class="form-input"></div>
+    <div class="form-row"><label>CTA - Testo</label><textarea formControlName="ctaText" class="form-input" rows="2"></textarea></div>
+
+    <h2>Servizi</h2>
+    <div formArrayName="services">
+      <div *ngFor="let service of servicesArray.controls; let i = index" [formGroupName]="i" class="array-item">
+        <div class="form-row"><label>Icona</label><input type="text" formControlName="icon" class="form-input"></div>
+        <div class="form-row"><label>Titolo</label><input type="text" formControlName="title" class="form-input"></div>
+        <div class="form-row"><label>Descrizione</label><textarea formControlName="description" class="form-input" rows="2"></textarea></div>
+        <button type="button" class="btn btn-sm btn-danger" (click)="removeService(i)">Rimuovi</button>
+      </div>
+      <button type="button" class="btn btn-sm" (click)="addService()">+ Aggiungi servizio</button>
+    </div>
+
+    <h2>Contatti generali</h2>
+    <div class="form-row"><label>Telefono</label><input type="text" formControlName="phone" class="form-input"></div>
+    <div class="form-row"><label>Email</label><input type="email" formControlName="email" class="form-input"></div>
+    <div class="form-row"><label>Orari di apertura</label>
+      <div formArrayName="workingHours">
+        <div *ngFor="let hour of workingHoursArray.controls; let i = index">
+          <input [formControlName]="i" class="form-input" style="margin-bottom:5px;">
+          <button type="button" class="btn btn-sm btn-danger" (click)="removeWorkingHour(i)">X</button>
+        </div>
+        <button type="button" class="btn btn-sm" (click)="addWorkingHour()">+ Aggiungi orario</button>
+      </div>
+    </div>
+
+    <h2>Sedi</h2>
+    <div formArrayName="locations">
+      <div *ngFor="let loc of locationsArray.controls; let i = index" [formGroupName]="i" class="array-item">
+        <div class="form-row"><label>Città</label><input type="text" formControlName="city" class="form-input"></div>
+        <div class="form-row"><label>Badge (es. Sede Legale)</label><input type="text" formControlName="badge" class="form-input"></div>
+        <div class="form-row"><label>Indirizzo (HTML permesso)</label><textarea formControlName="address" class="form-input" rows="2"></textarea></div>
+        <div class="form-row"><label>Regione</label><input type="text" formControlName="region" class="form-input"></div>
+        <div class="form-row"><label>Descrizione</label><textarea formControlName="description" class="form-input" rows="2"></textarea></div>
+        <button type="button" class="btn btn-sm btn-danger" (click)="removeLocation(i)">Rimuovi</button>
+      </div>
+      <button type="button" class="btn btn-sm" (click)="addLocation()">+ Aggiungi sede</button>
+    </div>
+
+    <h2>Footer</h2>
+    <div class="form-row"><label>Copyright</label><input type="text" formControlName="footerCopyright" class="form-input"></div>
+
+    <button type="submit" class="btn btn-primary btn-block" [disabled]="contentForm.invalid">Salva tutti i contenuti</button>
+  </form>
+</div>

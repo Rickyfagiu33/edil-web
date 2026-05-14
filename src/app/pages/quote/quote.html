@@ -1,0 +1,64 @@
+<section class="page-header">
+  <div class="container">
+    <h1 class="page-title">Preventivatore Online</h1>
+    <p class="page-subtitle">Ottieni una stima immediata del tuo progetto. Inserisci i dati richiesti e scopri il costo approssimativo.</p>
+  </div>
+</section>
+
+<section class="quote-section section-padding">
+  <div class="container">
+    <div class="quote-layout">
+      <div class="quote-form-card">
+        <h2 class="quote-form-title">Inserisci i dettagli del progetto</h2>
+        <p class="quote-form-desc">Tutti i campi sono obbligatori per ottenere un calcolo accurato.</p>
+
+        <form [formGroup]="quoteForm" class="quote-form" novalidate>
+          <div class="form-group">
+            <label class="form-label">Tipo di lavoro</label>
+            <select formControlName="workType" class="form-select">
+              <option value="">-- Seleziona il tipo di lavoro --</option>
+              <option value="costruzione">Costruzione</option>
+              <option value="restauro">Restauro</option>
+              <option value="modifica">Modifica</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Metri quadri (m²)</label>
+            <input type="number" formControlName="sqMeters" class="form-input" placeholder="Es. 100" min="1" max="10000">
+            <small class="form-hint">Inserisci una superficie tra 1 e 10.000 m²</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Livello di difficoltà</label>
+            <select formControlName="difficulty" class="form-select">
+              <option value="">-- Seleziona la difficoltà --</option>
+              <option value="bassa">Bassa - Lavori standard</option>
+              <option value="media">Media - Lavori complessi</option>
+              <option value="alta">Alta - Lavori molto complessi</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <div class="quote-result-card">
+        <h2 class="result-title">Riepilogo Preventivo</h2>
+        <div *ngIf="!hasData" class="result-placeholder">
+          <span class="result-icon">📋</span>
+          <p>Compila tutti i campi per visualizzare il preventivo stimato.</p>
+        </div>
+        <div *ngIf="hasData && result" class="result-content">
+          <div class="result-details">
+            <div class="result-row"><span class="result-label">Tipo lavoro:</span><span class="result-value">{{ result.workTypeLabel }}</span></div>
+            <div class="result-row"><span class="result-label">Metri quadri:</span><span class="result-value">{{ result.sqMeters }} m²</span></div>
+            <div class="result-row"><span class="result-label">Prezzo base (€/m²):</span><span class="result-value">{{ result.basePricePerSqm | currency:'EUR':'symbol':'1.2-2':'it' }} /m²</span></div>
+            <div class="result-row"><span class="result-label">Moltiplicatore difficoltà:</span><span class="result-value">{{ result.multiplierLabel }}</span></div>
+            <hr class="result-divider">
+            <div class="result-row result-row--highlight"><span class="result-label">Prezzo IVA esclusa:</span><span class="result-value result-value--big">{{ result.subtotal | currency:'EUR':'symbol':'1.2-2':'it' }}</span></div>
+            <div class="result-row"><span class="result-label">IVA (22%):</span><span class="result-value">{{ result.vat | currency:'EUR':'symbol':'1.2-2':'it' }}</span></div>
+            <div class="result-row result-row--total"><span class="result-label">TOTALE:</span><span class="result-value result-value--total">{{ result.total | currency:'EUR':'symbol':'1.2-2':'it' }}</span></div>
+          </div>
+          <p class="result-note">* Il preventivo è una stima indicativa. Per un preventivo preciso e personalizzato, <a routerLink="/contacts">contattaci</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,55 @@
+<ng-container *ngIf="content$ | async as c">
+  <section class="hero" id="home">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1 class="hero-title">{{ c.heroTitle }}</h1>
+      <p class="hero-subtitle">{{ c.heroSubtitle }}</p>
+      <div class="hero-buttons">
+        <a routerLink="/quote" class="btn btn-primary">Richiedi Preventivo</a>
+        <a routerLink="/gallery" class="btn btn-outline">I Nostri Lavori</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about section-padding" id="chi-siamo">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Chi Siamo</span>
+        <h2 class="section-title">{{ c.aboutTitle }}</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text" [innerHTML]="c.aboutText"></div>
+        <div class="about-stats">
+          <div class="stat-card"><span class="stat-number">25+</span><span class="stat-label">Anni di esperienza</span></div>
+          <div class="stat-card"><span class="stat-number">500+</span><span class="stat-label">Progetti completati</span></div>
+          <div class="stat-card"><span class="stat-number">3</span><span class="stat-label">Sedi operative</span></div>
+          <div class="stat-card"><span class="stat-number">100%</span><span class="stat-label">Clienti soddisfatti</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="services section-padding bg-light" id="servizi">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Cosa Offriamo</span>
+        <h2 class="section-title">I nostri servizi</h2>
+      </div>
+      <div class="services-grid">
+        <article *ngFor="let s of c.services" class="service-card">
+          <div class="service-icon">{{ s.icon }}</div>
+          <h3 class="service-title">{{ s.title }}</h3>
+          <p class="service-desc">{{ s.description }}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta section-padding">
+    <div class="container cta-content">
+      <h2 class="cta-title">{{ c.ctaTitle }}</h2>
+      <p class="cta-text">{{ c.ctaText }}</p>
+      <a routerLink="/quote" class="btn btn-gold">Calcola il tuo preventivo</a>
+    </div>
+  </section>
+</ng-container>

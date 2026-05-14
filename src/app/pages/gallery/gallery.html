@@ -1,0 +1,33 @@
+<section class="page-header">
+  <div class="container">
+    <h1 class="page-title">Galleria Lavori</h1>
+    <p class="page-subtitle">Scopri alcuni dei nostri progetti più recenti: costruzioni, restauri e modifiche realizzate con passione e maestria.</p>
+  </div>
+</section>
+
+<section class="gallery-section section-padding">
+  <div class="container">
+    <div class="gallery-filters">
+      <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">Tutti</button>
+      <button class="filter-btn" [class.active]="activeFilter === 'costruzione'" (click)="setFilter('costruzione')">Costruzioni</button>
+      <button class="filter-btn" [class.active]="activeFilter === 'restauro'" (click)="setFilter('restauro')">Restauri</button>
+      <button class="filter-btn" [class.active]="activeFilter === 'modifica'" (click)="setFilter('modifica')">Modifiche</button>
+    </div>
+
+    <div class="gallery-grid">
+      <article *ngFor="let project of filteredProjects" class="gallery-item">
+        <div class="gallery-image-wrapper">
+          <img [src]="project.imageUrl" [alt]="project.title" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-category">{{ project.category | titlecase }}</span>
+          </div>
+        </div>
+        <div class="gallery-info">
+          <h3 class="gallery-title">{{ project.title }}</h3>
+          <p class="gallery-desc">{{ project.description }}</p>
+          <p class="gallery-location">📍 {{ project.location }}</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

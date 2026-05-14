@@ -1,0 +1,19 @@
+<section class="login-section">
+  <div class="login-container">
+    <h2>Accesso Amministrazione</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" class="form-input" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" class="form-input" autocomplete="current-password">
+      </div>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || loading">
+        {{ loading ? 'Caricamento...' : 'Accedi' }}
+      </button>
+    </form>
+  </div>
+</section>

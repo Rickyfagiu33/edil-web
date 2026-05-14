@@ -1,0 +1,28 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a routerLink="/" class="logo" aria-label="EdilSolido Costruzioni - Home">
+      <span class="logo-icon">🏗️</span>
+      <span class="logo-text">Edil<span class="logo-highlight">Solido</span></span>
+    </a>
+
+    <button class="hamburger"
+            [class.active]="isMenuOpen"
+            (click)="toggleMenu()"
+            aria-label="Apri menu di navigazione"
+            [attr.aria-expanded]="isMenuOpen">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
+    <nav class="main-nav" [class.open]="isMenuOpen">
+      <ul class="nav-list">
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="onNavLinkClick()" class="nav-link">Home</a></li>
+        <li><a routerLink="/gallery" routerLinkActive="active" (click)="onNavLinkClick()" class="nav-link">Galleria Lavori</a></li>
+        <li><a routerLink="/quote" routerLinkActive="active" (click)="onNavLinkClick()" class="nav-link">Preventivatore</a></li>
+        <li><a routerLink="/contacts" routerLinkActive="active" (click)="onNavLinkClick()" class="nav-link">Contatti</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="nav-overlay" [class.active]="isMenuOpen" (click)="closeMenu()"></div>
+</header>
